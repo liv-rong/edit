@@ -1,9 +1,9 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 // Import the Slate editor factory.
 import { createEditor } from 'slate'
-import { Editor, Transforms, Element, Node, BaseEditor } from 'slate'
-import { RenderElementProps } from 'slate-react'
+import { Editor, Transforms, Element, Node, BaseEditor, Descendant } from 'slate'
+import { RenderElementProps, RenderLeafProps } from 'slate-react'
 import { ReactEditor } from 'slate-react'
 
 // Import the Slate components and React plugin.
@@ -16,6 +16,7 @@ type CustomElement = {
 
 type CustomText = {
   text: string
+  bold?: boolean
 }
 
 declare module 'slate' {
@@ -26,108 +27,57 @@ declare module 'slate' {
   }
 }
 
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [{ text: 'A line of text in a paragraph.' }]
-  }
-] as CustomElement[]
-
-const CodeElement = (props: {
-  attributes: React.JSX.IntrinsicAttributes &
-    React.ClassAttributes<HTMLPreElement> &
-    React.HTMLAttributes<HTMLPreElement>
-  children:
-    | string
-    | number
-    | bigint
-    | boolean
-    | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
-    | Iterable<React.ReactNode>
-    | React.ReactPortal
-    | Promise<
-        | string
-        | number
-        | bigint
-        | boolean
-        | React.ReactPortal
-        | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
-        | Iterable<React.ReactNode>
-        | null
-        | undefined
-      >
-    | null
-    | undefined
-}) => {
-  return (
-    <pre {...props.attributes}>
-      <code>{props.children}</code>
-    </pre>
-  )
-}
-
-const DefaultElement = (props: {
-  attributes: React.JSX.IntrinsicAttributes &
-    React.ClassAttributes<HTMLParagraphElement> &
-    React.HTMLAttributes<HTMLParagraphElement>
-  children:
-    | string
-    | number
-    | bigint
-    | boolean
-    | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
-    | Iterable<React.ReactNode>
-    | React.ReactPortal
-    | Promise<
-        | string
-        | number
-        | bigint
-        | boolean
-        | React.ReactPortal
-        | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
-        | Iterable<React.ReactNode>
-        | null
-        | undefined
-      >
-    | null
-    | undefined
-}) => {
-  return <p {...props.attributes}>{props.children}</p>
-}
-
 const App = () => {
   const [editor] = useState(() => withReact(createEditor()))
-  // Render the Slate context.
 
-  const renderElement = useCallback((props: RenderElementProps) => {
-    switch (props.element.type) {
-      case 'code':
-        return <CodeElement {...props} />
-      default:
-        return <DefaultElement {...props} />
-    }
+  // Define a serializing function that takes a value and returns a string.
+  const serialize = (value: Descendant[]): string => {
+    return (
+      value
+        // Return the string content of each paragraph in the value's children.
+        .map((n: Descendant) => Node.string(n))
+        // Join them all with line breaks denoting paragraphs.
+        .join('\n')
+    )
+  }
+
+  // Define a deserializing function that takes a string and returns a value.
+  const deserialize = (string: string): Descendant[] => {
+    // Return a value array of children derived by splitting the string.
+    return string.split('\n').map((line: string) => {
+      return {
+        type: 'paragraph',
+        children: [{ text: line }]
+      }
+    })
+  }
+
+  const initialValue = useMemo(() => {
+    const savedContent = localStorage.getItem('content')
+    return savedContent
+      ? deserialize(savedContent)
+      : ([
+          {
+            type: 'paragraph' as const,
+            children: [{ text: '开始编辑...' }]
+          }
+        ] as CustomElement[])
   }, [])
+
   return (
     <div>
       <Slate
         editor={editor}
         initialValue={initialValue}
+        onChange={(value: Descendant[]) => {
+          const isAstChange = editor.operations.some((op) => 'set_selection' !== op.type)
+          if (isAstChange) {
+            // Serialize the value and save the string value to Local Storage.
+            localStorage.setItem('content', serialize(value))
+          }
+        }}
       >
-        <Editable
-          renderElement={renderElement}
-          onKeyDown={(event) => {
-            console.log(event.key)
-            if (event.key === 'a' && event.ctrlKey) {
-              // Prevent the "`" from being inserted by default.
-              event.preventDefault()
-              console.log(' console.log(event.key)')
-              // Otherwise, set the currently selected blocks type to "code".
-              Transforms.setNodes(editor, { type: 'code' } as Partial<Node>, {
-                match: (n) => Element.isElement(n) && Editor.isBlock(editor, n)
-              })
-            }
-          }}
-        />
+        <Editable />
       </Slate>
     </div>
   )
