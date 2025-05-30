@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import * as React from 'react';
+import * as React from 'react'
 
-import type { PlateContentProps } from '@udecode/plate/react';
-import type { VariantProps } from 'class-variance-authority';
+import type { PlateContentProps } from '@udecode/plate/react'
+import type { VariantProps } from 'class-variance-authority'
 
-import { PlateContainer, PlateContent } from '@udecode/plate/react';
-import { cva } from 'class-variance-authority';
+import { PlateContainer, PlateContent } from '@udecode/plate/react'
+import { cva } from 'class-variance-authority'
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 const editorContainerVariants = cva(
   'relative w-full cursor-text overflow-y-auto caret-primary select-text selection:bg-brand/25 focus-visible:outline-none [&_.slate-selection-area]:z-50 [&_.slate-selection-area]:border [&_.slate-selection-area]:border-brand/25 [&_.slate-selection-area]:bg-brand/15',
   {
     defaultVariants: {
-      variant: 'default',
+      variant: 'default'
     },
     variants: {
       variant: {
@@ -29,18 +29,17 @@ const editorContainerVariants = cva(
         select: cn(
           'group rounded-md border border-input ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
           'has-data-readonly:w-fit has-data-readonly:cursor-default has-data-readonly:border-transparent has-data-readonly:focus-within:[box-shadow:none]'
-        ),
-      },
-    },
+        )
+      }
+    }
   }
-);
+)
 
 export const EditorContainer = ({
   className,
   variant,
   ...props
-}: React.ComponentProps<'div'> &
-  VariantProps<typeof editorContainerVariants>) => {
+}: React.ComponentProps<'div'> & VariantProps<typeof editorContainerVariants>) => {
   return (
     <PlateContainer
       className={cn(
@@ -50,10 +49,10 @@ export const EditorContainer = ({
       )}
       {...props}
     />
-  );
-};
+  )
+}
 
-EditorContainer.displayName = 'EditorContainer';
+EditorContainer.displayName = 'EditorContainer'
 
 const editorVariants = cva(
   cn(
@@ -65,33 +64,31 @@ const editorVariants = cva(
   ),
   {
     defaultVariants: {
-      variant: 'default',
+      variant: 'default'
     },
     variants: {
       disabled: {
-        true: 'cursor-not-allowed opacity-50',
+        true: 'cursor-not-allowed opacity-50'
       },
       focused: {
-        true: 'ring-2 ring-ring ring-offset-2',
+        true: 'ring-2 ring-ring ring-offset-2'
       },
       variant: {
         ai: 'w-full px-0 text-base md:text-sm',
         aiChat:
           'max-h-[min(70vh,320px)] w-full max-w-[700px] overflow-y-auto px-3 py-2 text-base md:text-sm',
         comment: cn('rounded-none border-none bg-transparent text-sm'),
-        default:
-          'size-full px-16 pt-4 pb-72 text-base sm:px-[max(64px,calc(50%-350px))]',
+        default: 'size-full px-16 pt-4 pb-72 text-base sm:px-[max(64px,calc(50%-350px))]',
         demo: 'size-full px-16 pt-4 pb-72 text-base sm:px-[max(64px,calc(50%-350px))]',
         fullWidth: 'size-full px-16 pt-4 pb-72 text-base sm:px-24',
         none: '',
-        select: 'px-3 py-2 text-base data-readonly:w-fit',
-      },
-    },
+        select: 'px-3 py-2 text-base data-readonly:w-fit'
+      }
+    }
   }
-);
+)
 
-export type EditorProps = PlateContentProps &
-  VariantProps<typeof editorVariants>;
+export type EditorProps = PlateContentProps & VariantProps<typeof editorVariants>
 
 export const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
   ({ className, disabled, focused, variant, ...props }, ref) => {
@@ -102,7 +99,7 @@ export const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
           editorVariants({
             disabled,
             focused,
-            variant,
+            variant
           }),
           className
         )}
@@ -110,8 +107,8 @@ export const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
         disableDefaultStyles
         {...props}
       />
-    );
+    )
   }
-);
+)
 
-Editor.displayName = 'Editor';
+Editor.displayName = 'Editor'
