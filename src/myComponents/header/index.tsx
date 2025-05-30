@@ -1,7 +1,9 @@
+import { Button } from 'antd'
+
 const Header = () => {
   return (
     <div className="w-full h-12 border-b border-gray-200 px-2 flex items-center justify-start">
-      Header
+      <Button type="text">Text Button</Button>
     </div>
   )
 }
