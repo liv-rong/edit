@@ -129,7 +129,8 @@ const Header = () => {
               // style={{
               //   backgroundColor: 'red'
               // }}
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault()
                 if (item.type === 'style') {
                   toggleMark(editor, item.operate as CustomTextKey)
                 } else {

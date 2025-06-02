@@ -20,8 +20,6 @@ export const isMarkActive = (editor: CustomEditor, format: CustomTextKey) => {
 
 export const toggleMark = (editor: CustomEditor, format: CustomTextKey) => {
   // 保存当前选区
-  const { selection } = editor
-  console.log(selection, 'selection')
 
   const isActive = isMarkActive(editor, format)
 
@@ -31,9 +29,10 @@ export const toggleMark = (editor: CustomEditor, format: CustomTextKey) => {
     Editor.addMark(editor, format, true)
   }
 
-  // 恢复选区
-  // ReactEditor.focus(editor)
-  // Transforms.select(editor, selection)
+  if (editor.selection) {
+    ReactEditor.focus(editor)
+    Transforms.select(editor, editor.selection)
+  }
 }
 
 export const isAlignElement = (element: CustomElement): element is CustomElementWithAlign => {
@@ -99,13 +98,17 @@ export const toggleBlock = (editor: CustomEditor, format: CustomElementFormat) =
       type: isActive ? 'paragraph' : isList ? 'list-item' : format
     }
   }
-  console.log(newProperties)
+
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   if (!isActive && isList) {
     const block = { type: format, children: [] }
     console.log(block, 'block')
     Transforms.wrapNodes(editor, block)
+  }
+  if (editor.selection) {
+    ReactEditor.focus(editor)
+    Transforms.select(editor, editor.selection)
   }
 }
 
