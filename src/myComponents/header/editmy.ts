@@ -1,4 +1,5 @@
 import { Editor, Element as SlateElement, Transforms } from 'slate'
+import { ReactEditor } from 'slate-react'
 
 import {
   LIST_TYPES,
@@ -18,6 +19,10 @@ export const isMarkActive = (editor: CustomEditor, format: CustomTextKey) => {
 }
 
 export const toggleMark = (editor: CustomEditor, format: CustomTextKey) => {
+  // 保存当前选区
+  const { selection } = editor
+  console.log(selection, 'selection')
+
   const isActive = isMarkActive(editor, format)
 
   if (isActive) {
@@ -25,7 +30,12 @@ export const toggleMark = (editor: CustomEditor, format: CustomTextKey) => {
   } else {
     Editor.addMark(editor, format, true)
   }
+
+  // 恢复选区
+  // ReactEditor.focus(editor)
+  // Transforms.select(editor, selection)
 }
+
 export const isAlignElement = (element: CustomElement): element is CustomElementWithAlign => {
   return 'align' in element
 }
@@ -98,3 +108,42 @@ export const toggleBlock = (editor: CustomEditor, format: CustomElementFormat) =
     Transforms.wrapNodes(editor, block)
   }
 }
+
+// export const safelyRestoreSelection = (editor: Editor, originalSelection: Range | null) => {
+//   if (!originalSelection) return
+
+//   try {
+//     // 验证选区路径是否仍然有效
+//     const isValid =
+//       Editor.hasPath(editor, originalSelection.anchor.path) &&
+//       Editor.hasPath(editor, originalSelection.focus.path) &&
+//       Point.isAfter(
+//         originalSelection.anchor,
+//         Editor.start(editor, originalSelection.anchor.path)
+//       ) &&
+//       Point.isBefore(originalSelection.focus, Editor.end(editor, originalSelection.focus.path))
+
+//     if (isValid) {
+//       Transforms.select(editor, originalSelection)
+//     } else {
+//       // 如果选区无效，尝试找到最近的可用位置
+//       const text = Editor.string(editor, originalSelection)
+//       const [match] = Editor.nodes(editor, {
+//         at: [],
+//         match: (n) => Editor.isBlock(editor, n) && Editor.string(editor, [n]).includes(text)
+//       })
+
+//       if (match) {
+//         const [node, path] = match
+//         const start = Editor.start(editor, path)
+//         Transforms.select(editor, {
+//           anchor: start,
+//           focus: Editor.end(editor, path)
+//         })
+//       }
+//     }
+//     ReactEditor.focus(editor)
+//   } catch (e) {
+//     console.warn('Selection restore failed:', e)
+//   }
+// }

@@ -3,23 +3,19 @@ import { Heading } from '@/assets/svg'
 import { Button, Dropdown, Tooltip, type MenuProps } from 'antd'
 import classNames from 'classnames'
 import { Editor } from 'slate'
-import { useSlate } from 'slate-react' // 新增
+import { useSlate } from 'slate-react'
 
 import type { CustomElementFormat, CustomTextKey } from '@/types/custom-types'
 
 import { operateArr } from './constants'
-import { isBlockActive, isMarkActive, toggleBlock, toggleMark } from './editmy'
+import { isBlockActive, toggleBlock, toggleMark } from './editmy'
 
-interface Props {
-  editor: any
-}
-
-const Header = ({ editor }: Props) => {
-  const currentEditor = useSlate()
+const Header = () => {
+  const editor = useSlate()
 
   // 获取当前选区激活的样式
   const getActiveStyles = () => {
-    const marks = Editor.marks(currentEditor) || {}
+    const marks = Editor.marks(editor) || {}
     return Object.keys(marks).filter((key) => marks[key] === true)
   }
 
@@ -40,7 +36,7 @@ const Header = ({ editor }: Props) => {
       'center',
       'right'
     ]) {
-      if (isBlockActive(currentEditor, format as CustomElementFormat)) {
+      if (isBlockActive(editor, format as CustomElementFormat)) {
         return format
       }
     }

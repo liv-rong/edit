@@ -1,18 +1,23 @@
-import React, { KeyboardEvent, useState } from 'react'
+import React, { KeyboardEvent, useCallback, useMemo, useState } from 'react'
 import Header from '@/myComponents/header/index'
 import isHotkey from 'is-hotkey'
 import { createEditor, Editor } from 'slate'
-import { Editable, Slate, withReact } from 'slate-react'
+import { withHistory } from 'slate-history'
+import {
+  Editable,
+  Slate,
+  withReact,
+  type RenderElementProps,
+  type RenderLeafProps
+} from 'slate-react'
 
 import type { CustomEditor, CustomTextKey } from '@/types/custom-types'
 
 import { HOTKEYS, initialValue } from './constants'
-import renderElement from './Element'
-import renderLeaf from './Leaf'
+import RenderElement from './Element'
+import RenderLeaf from './Leaf'
 
 const Edit = () => {
-  const [editor] = useState(() => withReact(createEditor()))
-
   const isMarkActive = (editor: CustomEditor, format: CustomTextKey) => {
     const marks = Editor.marks(editor)
     return marks ? marks[format] === true : false
@@ -28,13 +33,18 @@ const Edit = () => {
     }
   }
 
+  const renderElement = useCallback((props: RenderElementProps) => <RenderElement {...props} />, [])
+  const renderLeaf = useCallback((props: RenderLeafProps) => <RenderLeaf {...props} />, [])
+
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+
   return (
     <div>
       <Slate
         editor={editor}
         initialValue={initialValue}
       >
-        <Header editor={editor} />
+        <Header />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}

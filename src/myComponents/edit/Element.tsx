@@ -7,7 +7,6 @@ const isAlignElement = (element: CustomElement): element is CustomElementWithAli
 }
 
 const Element = ({ attributes, children, element }: RenderElementProps) => {
-  console.log(element)
   const style: React.CSSProperties = {}
   if (isAlignElement(element)) {
     style.textAlign = element.align as AlignType
