@@ -1,5 +1,6 @@
-import React, { KeyboardEvent, useCallback, useMemo, useState } from 'react'
+import React, { KeyboardEvent, useCallback, useMemo } from 'react'
 import Header from '@/myComponents/header/index'
+import Toolbar from '@/myComponents/toolbar/index'
 import isHotkey from 'is-hotkey'
 import { createEditor, Editor } from 'slate'
 import { withHistory } from 'slate-history'
@@ -45,12 +46,14 @@ const Edit = () => {
         initialValue={initialValue}
       >
         <Header />
+        <Toolbar />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           placeholder="Enter some rich text…"
           spellCheck
           autoFocus
+          className="min-h-[200px] p-4 border border-gray-100 rounded focus:outline-none  "
           onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
             for (const hotkey in HOTKEYS) {
               if (isHotkey(hotkey, event as any)) {

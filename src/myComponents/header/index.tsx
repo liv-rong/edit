@@ -2,46 +2,15 @@ import { Heading } from '@/assets/svg'
 // import { toggleBlock, toggleMark } from '@/myComponents/header/editmy'
 import { Button, Dropdown, Tooltip, type MenuProps } from 'antd'
 import classNames from 'classnames'
-import { Editor } from 'slate'
 import { useSlate } from 'slate-react'
 
 import type { CustomElementFormat, CustomTextKey } from '@/types/custom-types'
 
 import { operateArr } from './constants'
-import { isBlockActive, toggleBlock, toggleMark } from './editmy'
+import { getActiveBlock, getActiveStyles, toggleBlock, toggleMark } from './editmy'
 
 const Header = () => {
   const editor = useSlate()
-
-  // 获取当前选区激活的样式
-  const getActiveStyles = () => {
-    const marks = Editor.marks(editor) || {}
-    return Object.keys(marks).filter((key) => marks[key] === true)
-  }
-
-  // 获取当前激活的块级样式
-  const getActiveBlock = () => {
-    for (const format of [
-      'heading-one',
-      'heading-two',
-      'heading-three',
-      'heading-four',
-      'heading-five',
-      'heading-six',
-      'paragraph',
-      'block-quote',
-      'numbered-list',
-      'bulleted-list',
-      'left',
-      'center',
-      'right'
-    ]) {
-      if (isBlockActive(editor, format as CustomElementFormat)) {
-        return format
-      }
-    }
-    return null
-  }
 
   const items: MenuProps['items'] = [
     {
@@ -100,10 +69,10 @@ const Header = () => {
     if (!operate) return ''
 
     if (type === 'style') {
-      const activeStyles = getActiveStyles()
+      const activeStyles = getActiveStyles(editor)
       return activeStyles.includes(operate) ? '!bg-gray-200' : ''
     } else {
-      const activeBlock = getActiveBlock()
+      const activeBlock = getActiveBlock(editor)
       return activeBlock === operate ? '!bg-gray-200' : ''
     }
   }

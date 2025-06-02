@@ -112,41 +112,32 @@ export const toggleBlock = (editor: CustomEditor, format: CustomElementFormat) =
   }
 }
 
-// export const safelyRestoreSelection = (editor: Editor, originalSelection: Range | null) => {
-//   if (!originalSelection) return
+// 获取当前激活的块级样式
+export const getActiveBlock = (editor: CustomEditor) => {
+  for (const format of [
+    'heading-one',
+    'heading-two',
+    'heading-three',
+    'heading-four',
+    'heading-five',
+    'heading-six',
+    'paragraph',
+    'block-quote',
+    'numbered-list',
+    'bulleted-list',
+    'left',
+    'center',
+    'right'
+  ]) {
+    if (isBlockActive(editor, format as CustomElementFormat)) {
+      return format
+    }
+  }
+  return null
+}
 
-//   try {
-//     // 验证选区路径是否仍然有效
-//     const isValid =
-//       Editor.hasPath(editor, originalSelection.anchor.path) &&
-//       Editor.hasPath(editor, originalSelection.focus.path) &&
-//       Point.isAfter(
-//         originalSelection.anchor,
-//         Editor.start(editor, originalSelection.anchor.path)
-//       ) &&
-//       Point.isBefore(originalSelection.focus, Editor.end(editor, originalSelection.focus.path))
-
-//     if (isValid) {
-//       Transforms.select(editor, originalSelection)
-//     } else {
-//       // 如果选区无效，尝试找到最近的可用位置
-//       const text = Editor.string(editor, originalSelection)
-//       const [match] = Editor.nodes(editor, {
-//         at: [],
-//         match: (n) => Editor.isBlock(editor, n) && Editor.string(editor, [n]).includes(text)
-//       })
-
-//       if (match) {
-//         const [node, path] = match
-//         const start = Editor.start(editor, path)
-//         Transforms.select(editor, {
-//           anchor: start,
-//           focus: Editor.end(editor, path)
-//         })
-//       }
-//     }
-//     ReactEditor.focus(editor)
-//   } catch (e) {
-//     console.warn('Selection restore failed:', e)
-//   }
-// }
+// 获取当前选区激活的样式
+export const getActiveStyles = (editor: CustomEditor) => {
+  const marks = Editor.marks(editor) || {}
+  return Object.keys(marks).filter((key) => marks[key] === true)
+}
