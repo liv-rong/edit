@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useCallback, useMemo } from 'react'
+import React, { KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import Header from '@/myComponents/header/index'
 import Toolbar from '@/myComponents/toolbar/index'
 import isHotkey from 'is-hotkey'
@@ -19,6 +19,12 @@ import RenderElement from './Element'
 import RenderLeaf from './Leaf'
 
 const Edit = () => {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const isMarkActive = (editor: CustomEditor, format: CustomTextKey) => {
     const marks = Editor.marks(editor)
     return marks ? marks[format] === true : false
@@ -38,6 +44,10 @@ const Edit = () => {
   const renderLeaf = useCallback((props: RenderLeafProps) => <RenderLeaf {...props} />, [])
 
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+
+  if (!mounted) {
+    return <div className="min-h-[200px] border rounded" />
+  }
 
   return (
     <div>

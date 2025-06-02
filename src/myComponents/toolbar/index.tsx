@@ -92,7 +92,7 @@ const Toolbar = () => {
     } catch (e) {
       console.error('Position calculation failed:', e)
     }
-  })
+  }, [editor, editor.selection, inFocus])
 
   const classNamesMy = (operate: string | undefined, type: string = 'style') => {
     if (!operate) return ''
