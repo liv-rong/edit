@@ -1,6 +1,6 @@
 import type { Descendant } from 'slate'
 
-import type { CustomTextKey } from './custom-types'
+import type { CustomTextKey } from '@/types/custom-types'
 
 export const HOTKEYS: Record<string, CustomTextKey> = {
   'mod+b': 'bold',

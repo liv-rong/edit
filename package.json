@@ -15,6 +15,7 @@
     "@udecode/plate": "^48.0.5",
     "antd": "^5.25.3",
     "class-variance-authority": "^0.7.1",
+    "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "is-hotkey": "^0.2.0",
     "lucide-react": "^0.511.0",
@@ -22,6 +23,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "slate": "^0.114.0",
+    "slate-history": "^0.113.1",
     "slate-react": "^0.114.2",
     "tailwind-merge": "^3.3.0"
   },

@@ -1,6 +1,6 @@
 import { BaseEditor, BaseRange, Descendant, Element, Range } from 'slate'
 import { HistoryEditor } from 'slate-history'
-import { ReactEditor } from 'slate-react'
+import { ReactEditor, type RenderElementProps } from 'slate-react'
 
 export type BlockQuoteElement = {
   type: 'block-quote'
@@ -92,11 +92,11 @@ export type ParagraphElement = {
   children: Descendant[]
 }
 
-export type TableElement = { type: 'table'; children: TableRow[] }
+export type TableElement = { type: 'table'; children: any[] }
 
 export type TableCellElement = { type: 'table-cell'; children: CustomText[] }
 
-export type TableRowElement = { type: 'table-row'; children: TableCell[] }
+export type TableRowElement = { type: 'table-row'; children: any[] }
 
 export type TitleElement = { type: 'title'; children: Descendant[] }
 
@@ -124,7 +124,7 @@ export type CustomElementWithAlign =
   | BlockQuoteElement
   | BulletedListElement
 
-type CustomElement =
+export type CustomElement =
   | BlockQuoteElement
   | BulletedListElement
   | CheckListItemElement

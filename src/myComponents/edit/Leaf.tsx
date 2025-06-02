@@ -1,6 +1,7 @@
 import type { RenderLeafProps } from 'slate-react'
 
 const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+  console.log('leaf', leaf)
   if (leaf.bold) {
     children = <strong>{children}</strong>
   }
@@ -15,6 +16,14 @@ const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 
   if (leaf.underline) {
     children = <u>{children}</u>
+  }
+
+  if (leaf.underline) {
+    children = <u>{children}</u>
+  }
+
+  if (leaf.strikethrough) {
+    children = <del>{children}</del>
   }
 
   return <span {...attributes}>{children}</span>

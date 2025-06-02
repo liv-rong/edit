@@ -1,17 +1,12 @@
-import React, { KeyboardEvent, MouseEvent, useCallback, useMemo, useState } from 'react'
+import React, { KeyboardEvent, useState } from 'react'
+import Header from '@/myComponents/header/index'
 import isHotkey from 'is-hotkey'
-import { createEditor, Descendant, Editor, Element as SlateElement, Transforms } from 'slate'
-import {
-  Editable,
-  ReactEditor,
-  Slate,
-  withReact,
-  type RenderElementProps,
-  type RenderLeafProps
-} from 'slate-react'
+import { createEditor, Editor } from 'slate'
+import { Editable, Slate, withReact } from 'slate-react'
+
+import type { CustomEditor, CustomTextKey } from '@/types/custom-types'
 
 import { HOTKEYS, initialValue } from './constants'
-import type { CustomEditor, CustomTextKey } from './custom-types'
 import renderElement from './Element'
 import renderLeaf from './Leaf'
 
@@ -39,6 +34,7 @@ const Edit = () => {
         editor={editor}
         initialValue={initialValue}
       >
+        <Header editor={editor} />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
