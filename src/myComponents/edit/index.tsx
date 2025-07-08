@@ -1,5 +1,6 @@
 import React, { KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import Header from '@/myComponents/header/index'
+import { SearchHighlight, useSearchHighlight } from '@/myComponents/header/Search'
 import Toolbar from '@/myComponents/toolbar/index'
 import isHotkey from 'is-hotkey'
 import { createEditor, Editor } from 'slate'
@@ -20,6 +21,8 @@ import RenderLeaf from './Leaf'
 
 const Edit = () => {
   const [mounted, setMounted] = useState(false)
+
+  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
     setMounted(true)
@@ -45,6 +48,8 @@ const Edit = () => {
 
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
+  const decorate = useSearchHighlight(search)
+
   if (!mounted) {
     return <div className="min-h-[200px] border rounded" />
   }
@@ -55,9 +60,16 @@ const Edit = () => {
         editor={editor}
         initialValue={initialValue}
       >
-        <Header />
+        <div className="flex justify-between items-center border-b border-gray-200">
+          <Header />
+          <SearchHighlight
+            search={search}
+            onSearchChange={setSearch}
+          />
+        </div>
         <Toolbar />
         <Editable
+          decorate={decorate}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           placeholder="Enter some rich text…"

@@ -159,6 +159,7 @@ export type CustomText = {
   code?: boolean
   underline?: boolean
   strikethrough?: boolean
+  highlight?: boolean
   // MARKDOWN PREVIEW SPECIFIC LEAF
   underlined?: boolean
   title?: boolean

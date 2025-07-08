@@ -1,6 +1,16 @@
 import type { RenderLeafProps } from 'slate-react'
 
 const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+  if (leaf.highlight) {
+    children = (
+      <span
+        style={{ backgroundColor: 'yellow' }}
+        {...attributes}
+      >
+        {children}
+      </span>
+    )
+  }
   if (leaf.bold) {
     children = <strong>{children}</strong>
   }

@@ -78,7 +78,7 @@ const Header = () => {
   }
 
   return (
-    <div className="w-full h-12 border-b border-gray-200 px-2 flex gap-2 items-center justify-start">
+    <div className="w-full h-12  px-2 flex gap-2 items-center justify-start">
       <Dropdown menu={{ items }}>
         <Button
           type="text"
